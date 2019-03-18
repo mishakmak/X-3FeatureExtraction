@@ -1,0 +1,31 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage[ruled,vlined]{algorithm2e}
+
+\title{X^3 Feature Extraction}
+\author{Misha Klopukh, William Hahn, Michael Teti, Elan Barenholtz}
+\date{March 2019}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+Convolutional neural networks are traditionally presented a dataset and build a set of convolution filters and network weights to classify each image in the dataset, and use gradient descent to optimize the weights based on knowledge of the correct class. This is known as supervised learning, and is how most neural networks are trained. Classification can be thought of as a combination of two tasks, definition and detection, and these two tasks share resources. You would think that you wouldn't need to relearn what a line looks like to tell the difference between a triangle and a square, nor redefine a basic shape or pattern to tell a cat from a dog. However, our current neural networks do in fact change these primitives quite a bit while learning, which makes them slow and inefficient. A common workaround for this problem is to use the weights or get the features from a pretrained network and use them as a baseline. However, the features from a neural network pretrained on imagenet are not necessarily the features you want for your dataset, and, if you leave all of the layers traininable, it doesn't solve the original problem, and it will continue to modify the primitive features. We propose a different solution. X3Net is a new class of semi-supervised networks that initialize the convolution features using our unsupervised $X^3$ algorithm, which gives working custom features for your dataset, and freezes the first few convolutional layers. In addition, the $X^3$ algorithm runs in minutes, not hours, and speeds up the neural network training significantly. Figure 1 shows the speedup of various X3Nets on the Oxford 17 Flowers dataset compared to the standard Alexnet, represented in blue. As you can see, X3UF45, which consists of 5 convolutional layers pretrained on $X^3$, the first 3 of which are frozen, and 4 fully connected layers, trains by far the fastest, reaching 100\% Validation accuracy in under 10 epochs, compared to Alexnet, which reaches 100\% in 40 epochs.
+\section{The Algorithm}
+\begin{algorithm}[H]
+\SetAlgoLined
+\KwResult{W: A tensor containing the weights for the layer}
+W = Random Normal Tensor, Shape=(filter size, Num Filters)\;
+\For{$i=0$ \KwTo $iters$}{
+W = \textbf{Normalize Columns}(W)\;
+batch = \textbf{get batch}\;
+a = matmul(W*, batch)\;
+a = \textbf{Normalize Columns}(a)\;
+a = 0.5 \times a^3\;
+W = W + matmul(batch - matmul(W,a),a*)\;
+}
+\caption{$X^3$}
+\end{algorithm}
+\end{document}
