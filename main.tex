@@ -72,6 +72,7 @@ The first Alexnet network had its first layer pretrained with XCubed and frozen,
 
 On the ISIC melanoma challenge dataset\cite{melanoma1}\cite{melanoma2}, our model achieved an accuracy of 71\% in just 35 epochs using a simple Alexnet. For reference, the highest accuracy achieved in the 2018 contest without external data was 84\%, and that is with an ensemble of networks. This model also took less than 3 hours to run on an Intel i5 machine with a Titan X GPU, with the XCubed pretraining only taking 63 minutes and 46 seconds using only the CPU. The network in fact outperforms an imagenet pretrained Alexnet significantly, as shown in Figure \ref{fig:melanomacompare}. Interestingly, the first layer features produced by the XCubed algorithm were significantly different from the first layer features for 17 flowers. The features, shown in Figure \ref{fig:melanoma} had much more texture features in them such as checker patterns.
 \section{Discussion}
+\nocite{*}
 \bibliographystyle{unsrt}
 \bibliography{references}
 \end{document}
